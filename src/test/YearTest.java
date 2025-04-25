@@ -151,6 +151,23 @@
         }
 
 
+        @Test
+        public void testPreviousFrom100() {
+            Year minYear = new Year(100);
+            assertEquals(new Year(99), minYear.previous());
+        }
+
+
+            @Test
+            public void testParseInvalidYear() {
+                arrange();
+                String stringYear = "Zeyad";
+                assertNull(year.parseYear(stringYear));
+            }
+
+
+
+
 
 
     }

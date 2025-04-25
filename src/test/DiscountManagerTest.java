@@ -41,7 +41,8 @@ public class DiscountManagerTest {
         IDiscountCalculator mockCalculator = context.mock(IDiscountCalculator.class);
 
         context.checking(new Expectations() {{
-            oneOf(mockCalculator).isTheSpecialWeek(); will(returnValue(true));
+            oneOf(mockCalculator).isTheSpecialWeek();
+            will(returnValue(true));
         }});
 
         DiscountManager manager = new DiscountManager(true, mockCalculator);
@@ -55,31 +56,43 @@ public class DiscountManagerTest {
     }
 
     @Test
-    public void testCalculatePriceWhenSeasonAndRegularWeek() {
-        // Arrange
-        boolean isDiscountsSeason = true;
-        double originalPrice = 100.0;
-        int fakeDiscountMultiplier = 5;
-        double expectedPrice = 100.0 * fakeDiscountMultiplier;
+    public void testCalculatePriceWhenSeasonAndEvenWeek() {
+        Mockery context = new Mockery();
+        IDiscountCalculator mockCalculator = context.mock(IDiscountCalculator.class);
 
-        Mockery mockingContext = new Mockery();
-        IDiscountCalculator mockedDependency = mockingContext.mock(IDiscountCalculator.class);
-
-        mockingContext.checking(new Expectations() {{
-            oneOf(mockedDependency).isTheSpecialWeek();
+        context.checking(new Expectations() {{
+            oneOf(mockCalculator).isTheSpecialWeek();
             will(returnValue(false));
-            oneOf(mockedDependency).getDiscountPercentage();
-            will(returnValue(fakeDiscountMultiplier));
+            oneOf(mockCalculator).getDiscountPercentage();
+            will(returnValue(7));
         }});
 
-        DiscountManager discountManager = new DiscountManager(isDiscountsSeason, mockedDependency);
+        DiscountManager manager = new DiscountManager(true, mockCalculator);
 
-        // Act
-        double actualPrice = discountManager.calculatePriceAfterDiscount(originalPrice);
-
-        // Assert
-        assertEquals(expectedPrice, actualPrice, 0.001);
-        mockingContext.assertIsSatisfied();
+        double result = manager.calculatePriceAfterDiscount(100.0);
+        assertEquals(93.0, result, 0.001);
+        context.assertIsSatisfied();
     }
+
+
+    @Test
+    public void testCalculatePriceWhenSeasonAndOddWeek() {
+        Mockery context = new Mockery();
+        IDiscountCalculator mockCalculator = context.mock(IDiscountCalculator.class);
+
+        context.checking(new Expectations() {{
+            oneOf(mockCalculator).isTheSpecialWeek(); will(returnValue(false));
+            oneOf(mockCalculator).getDiscountPercentage(); will(returnValue(5));
+        }});
+
+        DiscountManager manager = new DiscountManager(true, mockCalculator);
+
+        double result = manager.calculatePriceAfterDiscount(100.0);
+        assertEquals(95.0, result, 0.001);
+        context.assertIsSatisfied();
+    }
+
+
+
 
 }

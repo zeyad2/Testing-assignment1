@@ -75,4 +75,16 @@ public class DiscountCalculatorTest {
         // Assert: Odd weeks should have 5% discount
         assertEquals("Discount should be 5% for odd weeks", 5, discount);
     }
+
+    @Test
+    public void testLeapYear(){
+       Week week=  new Week(53,2025);
+       discountCalculator= new DiscountCalculator(week);
+       assertFalse(discountCalculator.isTheSpecialWeek());
+       assertEquals(discountCalculator.getDiscountPercentage(),5);
+    }
+
+
+
+
 }
