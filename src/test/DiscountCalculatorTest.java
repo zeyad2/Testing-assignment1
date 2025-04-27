@@ -16,10 +16,6 @@ public class DiscountCalculatorTest {
     private DiscountCalculator discountCalculator;
     private Week week;
 
-    @Before
-    public void setUp() {
-        // Initialize DiscountCalculator without mocking
-    }
 
     @Test
     public void testIsTheSpecialWeekWhenFalse() {
