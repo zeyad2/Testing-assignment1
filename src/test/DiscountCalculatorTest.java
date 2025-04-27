@@ -2,8 +2,13 @@ package test;
 
 import JFree.DiscountCalculator;
 import org.jfree.data.time.Week;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Calendar;
+import java.util.Date;
+
 import static org.junit.Assert.*;
 
 public class DiscountCalculatorTest {
@@ -46,6 +51,8 @@ public class DiscountCalculatorTest {
         assertTrue("Expected week to be special", result);
     }
 
+
+
     @Test
     public void testGetDiscountPercentageEvenWeek() {
         // Create a real Week object for an even week (week 26)
@@ -82,6 +89,18 @@ public class DiscountCalculatorTest {
        discountCalculator= new DiscountCalculator(week);
        assertFalse(discountCalculator.isTheSpecialWeek());
        assertEquals(discountCalculator.getDiscountPercentage(),5);
+    }
+
+    @Test
+    public void testConstructorAssignsWeekCorrectly() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2025, 3, 15);
+        Date date = calendar.getTime();
+        Week week = new Week(date);
+        DiscountCalculator discountCalculator = new DiscountCalculator(week);
+        int weekNum = week.getWeek();
+        int expectedDiscount = weekNum % 2 == 0 ? 7 : 5;
+        Assert.assertEquals((long)expectedDiscount, (long)discountCalculator.getDiscountPercentage());
     }
 
 

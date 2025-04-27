@@ -92,6 +92,24 @@ public class DiscountManagerTest {
         context.assertIsSatisfied();
     }
 
+    @Test
+    public void testConstructorAssignmentOfFields() throws Exception {
+        boolean isDiscountsSeason = true;
+        Mockery mockingContext = new Mockery();
+        final IDiscountCalculator mockedDependency = (IDiscountCalculator)mockingContext.mock(IDiscountCalculator.class);
+        DiscountManager discountManager = new DiscountManager(isDiscountsSeason, mockedDependency);
+        mockingContext.checking(new Expectations() {
+            {
+                this.oneOf(mockedDependency).isTheSpecialWeek();
+                this.will(returnValue(false));
+                this.oneOf(mockedDependency).getDiscountPercentage();
+                this.will(returnValue(5));
+            }
+        });
+        discountManager.calculatePriceAfterDiscount(100.0);
+        mockingContext.assertIsSatisfied();
+    }
+
 
 
 
