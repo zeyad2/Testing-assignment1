@@ -1,9 +1,12 @@
     package test;
 
     import org.jfree.data.time.Year;
+    import org.junit.Assert;
     import org.junit.Test;
 
     import java.util.Calendar;
+    import java.util.Date;
+    import java.util.TimeZone;
 
     import static org.junit.Assert.*;
 
@@ -165,8 +168,33 @@
                 assertNull(year.parseYear(stringYear));
             }
 
+        @Test
+        public void testYearDateTimezoneCtor() {
+            TimeZone zone = TimeZone.getTimeZone("America/New_York");
+            Calendar calendar = Calendar.getInstance(zone);
+            calendar.set(2021, 11, 31);
+            calendar.set(11, 0);
+            calendar.set(12, 0);
+            calendar.set(13, 0);
+            calendar.set(14, 0);
+            Date date = calendar.getTime();
+            this.year = new Year(date);
+            Assert.assertEquals(2021L, (long)this.year.getYear());
+        }
+        @Test
+        public void testYearDateCtor() {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(2022, 5, 15);
+            Date date = calendar.getTime();
+            this.year = new Year(date);
+            Assert.assertEquals(2022L, (long)this.year.getYear());
+        }
 
-
+        @Test(expected = IllegalArgumentException.class)
+        public void testNextFromMax() {
+            Year maxYear = new Year(10000);
+            maxYear.next();
+        }
 
 
 
